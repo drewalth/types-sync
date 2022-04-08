@@ -3,12 +3,11 @@
 A small CLI to copy all TypeScript `type`, `enum`, and `interface` declarations in a directory to a single `types.ts`
 file.
 
-Example use case, you are working with a Nodejs API and a Frontend framework that both use TypeScript. With `types-sync`
-you can let the API define your models and easily sync them with the client-side.
+In one example use case, you are working with a Nodejs API and a Frontend framework that both use TypeScript.
+With `types-sync` you can let the API define your models and easily sync them with the client-side.
 
 Inspired by [graphql-code-generator](https://www.graphql-code-generator.com/), an awesome tool that generates TS types
 from GraphQL schema.
-
 
 ### Requirements
 
@@ -45,6 +44,15 @@ You can provide your own source directory and destination.
 $ types-sync --src ~/my-project/server/src --output ~/my-project/client/src/types.ts
 ```
 
+In addition, you can specify which types to exclude. For example, if you are working with a Fastify server, you can
+ignore all the Fastify specific typings by adding the `--excludedTypes` flag.
+
+```shell
+$ types-sync --excludedTypes Fastify,Express
+```
+
+*Fastify types are excluded by default.
+
 ### Example
 
 A folder structure like this:
@@ -75,7 +83,7 @@ export interface MyInterface {
 
 
 export enum MyEnum {
-     FOO = "FOO"
+    FOO = "FOO"
 }
 
 export type NestedType = {
