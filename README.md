@@ -3,8 +3,8 @@
 A small CLI to copy all TypeScript `type`, `enum`, and `interface` declarations in a directory to a single `types.ts`
 file.
 
-In one example use case, you are working with a Nodejs API and a Frontend framework that both use TypeScript.
-With `types-sync` you can let the API define your models and easily sync them with the client-side.
+Great for when you are working with a Nodejs API and a frontend that both use TypeScript. With `types-sync` you can
+write your models once then easily sync them with the client-side helping to reduce duplication.
 
 Inspired by [graphql-code-generator](https://www.graphql-code-generator.com/), an awesome tool that generates TS types
 from GraphQL schema.
@@ -55,44 +55,42 @@ $ types-sync --excludedTypes Fastify,Express
 
 ### Example
 
-A folder structure like this:
+Running `types-sync` on the [`example/`](./example) directory:
 
 ```shell
->  src/bar.ts
->  src/nested-01/nested-02/nested.ts
->  src/nested-01/routes.ts
+$ types-sync --src ./example
 ```
 
-Produces:
+Produces a single TS file with consolidated declarations:
 
 ```ts
-export type MyType = {
-    label: string
-    nestedOne: {
-        val: string
-        nestedTwo: {
-            foo: boolean
-        }
-    }
+export enum MyEnum {
+    VALUE = "VALUE"
 }
-
 
 export interface MyInterface {
     value: string
 }
 
-
-export enum MyEnum {
-    FOO = "FOO"
+export type MyType = {
+    value: boolean
+    field: NestedType
 }
 
 export type NestedType = {
-    value: boolean
-}
-
-export type RouteType = {
-    path: string
-    nests: NestedType[]
+    value: number
+    obj: {
+        foo: {
+            bar: string[]
+        }
+    }
 }
 ```
 
+### Git Hooks
+
+Use `types-sync` in a Git hook with [Husky](https://www.npmjs.com/package/husky) from your frontend project.
+
+```shell
+$ npx husky add .husky/pre-push "types-sync --src ../server/src --output ./src/types.ts && npm run lint && npm run test && npm run build"
+```
